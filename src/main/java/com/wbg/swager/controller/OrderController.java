@@ -64,8 +64,9 @@ public class OrderController {
         System.out.println("1111111111");
         System.out.println(ordersMapper.deleteByPrimaryKey(id));
         if(ordersMapper.deleteByPrimaryKey(id)==1){
-            r.setCode(200);
             System.out.println("22222222222222");
+            r.setCode(200);
+
         }
         System.out.println("3333333333");
         return r.toJson();
