@@ -1,7 +1,7 @@
 package com.wbg.swager.controller;
 
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
+//import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.wbg.swager.dao.UserMapper;
 import com.wbg.swager.entity.FormBean;
 import com.wbg.swager.entity.R;
@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.jws.Oneway;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.PathParam;
@@ -31,19 +30,10 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public String create(User user, Model model) {
-        try{
-            if (userMapper.insert(user) > 0) {
-                model.addAttribute("msg", "添加成功");
-                model.addAttribute("username", "");
-                model.addAttribute("firstname", "");
-                model.addAttribute("lastname", "");
-                model.addAttribute("email", "");
-                model.addAttribute("password", "");
-                model.addAttribute("phone", "");
-                model.addAttribute("userstatus", "");
-                return "useradd";
-            } else {
-                model.addAttribute("msg", "添加失败");
+        try {
+            System.out.println(user.getUsername());
+            if (userMapper.selectUsername(user.getUsername()).size()!=0) {
+                model.addAttribute("msg", "用户名不可用，添加失败");
                 model.addAttribute("username", user.getUsername());
                 model.addAttribute("firstname", user.getFirstname());
                 model.addAttribute("lastname", user.getLastname());
@@ -51,18 +41,42 @@ public class UserController {
                 model.addAttribute("password", user.getPassword());
                 model.addAttribute("phone", user.getPhone());
                 model.addAttribute("userstatus", user.getUserstatus());
+
+
+            } else {
+                if (userMapper.insert(user) > 0) {
+                    model.addAttribute("msg", "添加成功");
+                    model.addAttribute("username", "");
+                    model.addAttribute("firstname", "");
+                    model.addAttribute("lastname", "");
+                    model.addAttribute("email", "");
+                    model.addAttribute("password", "");
+                    model.addAttribute("phone", "");
+                    model.addAttribute("userstatus", "");
+                    return "useradd";
+                } else {
+                    model.addAttribute("msg", "添加失败");
+                    model.addAttribute("username", user.getUsername());
+                    model.addAttribute("firstname", user.getFirstname());
+                    model.addAttribute("lastname", user.getLastname());
+                    model.addAttribute("email", user.getEmail());
+                    model.addAttribute("password", user.getPassword());
+                    model.addAttribute("phone", user.getPhone());
+                    model.addAttribute("userstatus", user.getUserstatus());
+                }
             }
-        }catch (Exception e){
-            model.addAttribute("msg", "异常添加失败");
-            model.addAttribute("username", user.getUsername());
-            model.addAttribute("firstname", user.getFirstname());
-            model.addAttribute("lastname", user.getLastname());
-            model.addAttribute("email", user.getEmail());
-            model.addAttribute("password", user.getPassword());
-            model.addAttribute("phone", user.getPhone());
-            model.addAttribute("userstatus", user.getUserstatus());
-            return "useradd";
-        }
+        }catch(Exception e){
+                model.addAttribute("msg", "异常添加失败");
+                model.addAttribute("username", user.getUsername());
+                model.addAttribute("firstname", user.getFirstname());
+                model.addAttribute("lastname", user.getLastname());
+                model.addAttribute("email", user.getEmail());
+                model.addAttribute("password", user.getPassword());
+                model.addAttribute("phone", user.getPhone());
+                model.addAttribute("userstatus", user.getUserstatus());
+                return "useradd";
+            }
+
 
         return "useradd";
     }
@@ -133,6 +147,35 @@ public class UserController {
         return "user";
     }
     /**
+     * 根据firstname查询操作
+     * @return
+     */
+    @RequestMapping( value ="/getFirstName", method = RequestMethod.GET)
+    public String getFirstname(String firstName,Model model){
+        System.out.println(firstName+"1111111111111");
+        List<User> user=userMapper.selectByFirstName(firstName);
+        System.out.println(user);
+        model.addAttribute("user",user);
+        System.out.println("22222222222222222222");
+        return "user";
+    }
+
+    /**
+     * 根据lastname查询操作
+     * @return
+     */
+    @RequestMapping( value ="/getByStatus", method = RequestMethod.GET)
+    public String selectByStatus(String userStatus,Model model){
+        System.out.println(userStatus+"1111111111111");
+        List<User> user=userMapper.selectByStatus(userStatus);
+        System.out.println(user);
+        model.addAttribute("user",user);
+        System.out.println("22222222222222222222");
+        return "user";
+    }
+
+
+    /**
      * 根据用户名查询修改
      * username
      * @return
@@ -162,17 +205,39 @@ public class UserController {
     @RequestMapping(value = "/{username}",method = RequestMethod.DELETE)
     public String del(@PathVariable("username") String username){
         R r=new R();
+        System.out.println("9999999999999");
+        System.out.println(username);
         try {
+            System.out.println("88888888888");
             if(userMapper.deleteByUserName(username)>0){
                 r.setCode(200);
+                System.out.println("7777777777");
             }
         }catch (Exception e){
             return r.toJson();
         }
-
+        System.out.println("6666666666666");
         return r.toJson();
     }
 
+    //修改用户信息
+    @RequestMapping(value = "/edit",method = RequestMethod.GET)
+    @ResponseBody
+  public String editUser(String username,String firstname,String lastname,String email,String password,String phone,String userstatus) {
+
+        {
+            R r = new R();
+
+        System.out.println("1111111111"+username);
+
+    if(userMapper.updateByPrimaryKeys(username,firstname,lastname,email,password,phone,userstatus)>0){
+           System.out.println("5555555555555");
+            r.setCode(200);
+     }
+            System.out.println("3333333333");
+            return r.toJson();
+        }
 
 
+    }
 }

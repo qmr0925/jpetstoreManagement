@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jmx.snmp.Timestamp;
+//import com.sun.jmx.snmp.Timestamp;
 
 import java.io.IOException;
 import java.text.ParsePosition;
@@ -60,18 +60,18 @@ public class DBUtil {
         }
         return request;
     }
-    public static Timestamp date(String date_str) {
-        try {
-            Calendar zcal = Calendar.getInstance();//日期类
-            Timestamp timestampnow = new Timestamp(zcal.getTimeInMillis());//转换成正常的日期格式
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");//改为需要的东西
-            ParsePosition pos = new ParsePosition(0);
-            java.util.Date current = formatter.parse(date_str, pos);
-            timestampnow = new Timestamp(current.getTime());
-            return timestampnow;
-        }
-        catch (NullPointerException e) {
-            return null;
-        }
-    }
+//    public static Timestamp date(String date_str) {
+//        try {
+//            Calendar zcal = Calendar.getInstance();//日期类
+//            Timestamp timestampnow = new Timestamp(zcal.getTimeInMillis());//转换成正常的日期格式
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");//改为需要的东西
+//            ParsePosition pos = new ParsePosition(0);
+//            java.util.Date current = formatter.parse(date_str, pos);
+//            timestampnow = new Timestamp(current.getTime());
+//            return timestampnow;
+//        }
+//        catch (NullPointerException e) {
+//            return null;
+//        }
+//    }
 }

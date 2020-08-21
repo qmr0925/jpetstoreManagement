@@ -45,10 +45,27 @@ public class OrderController {
         System.out.println(order);
         return "";
     }
-    @RequestMapping(value = "/adds",method = RequestMethod.POST)
-    public String adds(){
-        System.out.println();
-        return "";
+    @RequestMapping(value = "/deliver",method = RequestMethod.GET)
+    @ResponseBody
+    public String deliver(int id){
+        R r=new R();
+        System.out.println("1111111111");
+       // String orderStatus=ordersMapper.selectStatusByPrimaryKey(id);
+
+        if(ordersMapper.selectStatusByPrimaryKey(id).equals("已发货")||ordersMapper.selectStatusByPrimaryKey(id).equals("Yes"))
+        {
+            System.out.println("3333333333");
+            r.setCode(201);
+            System.out.println("4444444444444");
+        }else {
+            if (ordersMapper.updateByPrimaryKeys(id) > 0) {
+                System.out.println("55555555555555");
+                r.setCode(200);
+                System.out.println("66666666666666666");
+            }
+        }
+        System.out.println("77777777777777");
+        return r.toJson();
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -62,13 +79,31 @@ public class OrderController {
     public String del(int id) {
         R r=new R();
         System.out.println("1111111111");
-        System.out.println(ordersMapper.deleteByPrimaryKey(id));
-        if(ordersMapper.deleteByPrimaryKey(id)==1){
-            System.out.println("22222222222222");
-            r.setCode(200);
 
+        if(ordersMapper.deleteByPrimaryKey(id)>0){
+            r.setCode(200);
         }
         System.out.println("3333333333");
         return r.toJson();
     }
+
+    @RequestMapping( value ="/selectStatus", method = RequestMethod.GET)
+    public String selectByStatus(String orderStatus,Model model){
+        System.out.println(orderStatus+"1111111111111");
+        List<Orders> order=ordersMapper.selectByStatus(orderStatus);
+        System.out.println(order);
+        model.addAttribute("order",order);
+        System.out.println("22222222222222222222");
+        return "order";
+    }
+    @RequestMapping( value ="/selectByUsername", method = RequestMethod.GET)
+    public String selectByUsername(String username,Model model){
+        System.out.println(username+"3111111111111");
+        List<Orders> order=ordersMapper.selectByUserName(username);
+        System.out.println(order);
+        model.addAttribute("order",order);
+        System.out.println("32222222222222222222");
+        return "order";
+    }
+
 }

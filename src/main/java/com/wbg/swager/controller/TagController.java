@@ -1,5 +1,6 @@
 package com.wbg.swager.controller;
 
+import com.wbg.swager.dao.CategoryMapper;
 import com.wbg.swager.dao.TagMapper;
 import com.wbg.swager.entity.R;
 import com.wbg.swager.entity.Tag;
@@ -16,24 +17,38 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TagController {
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private CategoryMapper categoryMapper;
     @RequestMapping(value = "/index",method = RequestMethod.GET)
     public String index(Model model) {
         model.addAttribute("tag",tagMapper.selectAll());
+        model.addAttribute("categoryTable",categoryMapper.selectAll());
         return "tag";
     }
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
     public String add(Tag tag) {
         R r=new R();
-
         if(tagMapper.insert(tag)>0){
-           r.setCode(200);
+            r.setCode(200);
         }
         return r.toJson();
     }
+
+    @RequestMapping(value = "/change",method = RequestMethod.POST)
+    @ResponseBody
+    public String change(Tag tag) {
+        R r=new R();
+
+        if(tagMapper.updateByPrimaryKey(tag)>0){
+            r.setCode(200);
+        }
+        return r.toJson();
+    }
+
     @RequestMapping(value = "/del",method = RequestMethod.GET)
     @ResponseBody
-    public String del(int id) {
+    public String del(String id) {
         R r=new R();
 
         if(tagMapper.deleteByPrimaryKey(id)>0){

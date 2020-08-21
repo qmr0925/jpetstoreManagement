@@ -23,8 +23,8 @@
 <body>
 <div class="check-div">
     <div class="col-xs-4">
-    <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addChar">添加权限</button>
-        </div>
+        <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addChar">添加权限</button>
+    </div>
 </div>
 <div style="overflow-y:auto;width:100%;height: 560px;border-top: 1px solid blue">
     <table class="table table-striped">
@@ -38,7 +38,7 @@
                 <td>${ca.id}</td>
                 <td>${ca.name}</td>
                 <td>
-                    <button class="btn btn-success btn-xs upda" data-toggle="modal" value="${ca.id}" name="${ca.name}" data-target="#changeChar">修改</button>
+                    <button class="btn btn-success btn-xs upda" data-toggle="modal" id="button1" value="${ca.id}" name="${ca.name}" data-target="#changeChar">修改</button>
                     <button class="btn btn-danger btn-xs del" data-toggle="modal" name="${ca.id}" data-target="#deleteChar">删除</button>
                 </td>
             </tr>
@@ -51,6 +51,18 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="gridSystemModalLabel">添加类别</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form class="form-horizontal">
+                        <div class="form-group ">
+                            <label for="catid" class="col-xs-3 control-label">id：</label>
+                            <div class="col-xs-6 ">
+                                <input type="text" class="form-control input-sm duiqi" id="catid" placeholder="">
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
@@ -73,6 +85,49 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+
+
+<div class="modal fade" id="changeChar" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel1">修改类别</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form class="form-horizontal">
+                        <div class="form-group ">
+                            <label for="catid1" class="col-xs-3 control-label">id：</label>
+                            <div class="col-xs-6 ">
+                                <input type="text" class="form-control input-sm duiqi" id="catid1" disabled >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form class="form-horizontal">
+                        <div class="form-group ">
+                            <label for="name1" class="col-xs-3 control-label">类别：</label>
+                            <div class="col-xs-6 ">
+                                <input type="text" class="form-control input-sm duiqi" id="name1" >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                <button type="button" id="change" class="btn btn-xs btn-green">修 改</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <script>
 
     $("#add").click(function () {
@@ -80,7 +135,7 @@
             type:"post",
             url:"/category/add",
             dataType: 'json'
-            ,data:{name:$("#name").val()}
+            ,data:{id:$("#catid").val(),name:$("#name").val()}
             , success: function (data) {
                 if(data.code==200){
                     alert("添加成功");
@@ -91,10 +146,34 @@
             }
         })
     })
+
+    $(".upda").click(function () {
+        var abc = $(this).attr("value");
+        $("#catid1").val(abc);
+        $("#name1").val($(this).attr("name"));
+    })
+
+    $("#change").click(function () {
+        $.ajax({
+            type:"post",
+            url:"/category/change",
+            dataType:'json'
+            ,data:{id:$("#catid1").val(),name:$("#name1").val()}
+            ,success:function (data) {
+                if(data.code==200){
+                    alert("修改成功");
+                    window.location.reload();
+                }else{
+                    alert("修改失败");
+                }
+            }
+        })
+
+    })
     $(".del").click(function () {
         if(confirm("是否删除?")){
             $.ajax({
-                type:"get",
+                type:"GET",
                 url:"/category/del",
                 dataType: 'json'
                 ,data:{id:$(this).attr("name")}

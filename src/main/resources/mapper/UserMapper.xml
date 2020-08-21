@@ -23,7 +23,7 @@
         delete from user
         where id = #{id,jdbcType=INTEGER}
     </delete>
-    <delete id="deleteByUserName" parameterType="java.lang.Integer">
+    <delete id="deleteByUserName" >
      delete from user
     where username = #{username}
   </delete>
@@ -51,6 +51,20 @@
         userStatus = #{userstatus,jdbcType=VARCHAR}
         where id = #{id,jdbcType=INTEGER}
     </update>
+
+
+    <update id="updateByPrimaryKeys" >
+
+        update user
+        set
+        firstName = #{firstname,jdbcType=VARCHAR},
+        lastName = #{lastname,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
+        userStatus = #{userstatus,jdbcType=VARCHAR}
+        where username = #{username,jdbcType=VARCHAR}
+    </update>
     <update id="updateByUserName" parameterType="com.wbg.swager.entity.User">
     update user
     set
@@ -62,6 +76,8 @@
       userStatus = #{userstatus,jdbcType=VARCHAR}
     where username = #{username,jdbcType=VARCHAR}
   </update>
+
+
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         <!--
           WARNING - @mbg.generated
@@ -85,4 +101,16 @@
     <select id="selectByUserName" resultType="com.wbg.swager.entity.User">
     select * from User where username like "%"#{username}"%"
   </select>
+    <select id="selectByStatus" resultType="com.wbg.swager.entity.User">
+        select * from User where userStatus like "%"#{userStatus}"%"
+    </select>
+    <select id="selectUsername" resultType="com.wbg.swager.entity.User">
+        select * from User where username =#{username}
+    </select>
+
+
+    <select id="selectByFirstName" resultType="com.wbg.swager.entity.User">
+        select * from User where firstname like "%"#{firstname}"%"
+    </select>
+
 </mapper>

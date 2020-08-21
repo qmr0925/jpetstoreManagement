@@ -1,21 +1,16 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Administrator
-  Date: 2018/11/5
-  Time: 14:35
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Title</title>
+    <meta charset="UTF-8">
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
-    <!--[if lt IE 9]>
+
     <script src="../js/html5shiv.min.js"></script>
     <script src="../js/respond.min.js"></script>
-    <![endif]-->
+
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
     <link rel="stylesheet" type="text/css" href="../css/slide.css" />
@@ -32,14 +27,14 @@
                        </form>
                    </div>
                    <div class="col-xs-4">
-                       <form>
-                       <input type="text" class="form-control input-sm" name="firstName" placeholder="输入firstName搜索">
-                       <button class="btn btn-white btn-xs " type="submit">查 询 </button>
+                       <form  action="/user/getFirstName" method="get">
+                       <input type="text" class="form-control input-sm"  name="firstName" placeholder="输入firstName搜索" >
+                       <button class="btn btn-white btn-xs " id="selectFirst" type="submit" data-toggle="modal" data-target="#searchChar">查 询 </button>
                        </form>
                    </div>
                    <div class="col-lg-3 col-lg-offset-2 col-xs-4" style=" padding-right: 40px;text-align: right;">
-                       <form>
-                        <select>
+                       <form action="/user/getByStatus" method="get">
+                        <select name="userStatus">
                             <option value="正常">正常</option>
                             <option value="冻结">冻结</option>
                         </select>
@@ -62,14 +57,14 @@
             </tr>
         <c:forEach var="u" items="${user}" >
             <tr>
-                <td>${u.username}</td>
-                <td>${u.firstname}</td>
-                <td>${u.lastname}</td>
-                <td>${u.email}</td>
-                <td>${u.password}</td>
-                <td>${u.phone}</td>
-                <td>${u.userstatus}</td>
-                <td> <button class="btn btn-success btn-xs" data-toggle="modal" data-target="#changeChar">修改</button>
+                <td><input  type="text" class="username" value="${u.username}"></input></td>
+                <td><input type="text" value="${u.firstname}" class="firstname" ></input></td>
+                <td><input type="text" value="${u.lastname}" class="lastname" ></td>
+                <td><input type="text" value="${u.email}" class="email" ></td>
+                <td><input type="text" value="${u.password}" class="password" ></td>
+                <td><input type="text" value="${u.phone}" class="phone" ></td>
+                <td><input type="text" value="${u.userstatus}" class="userstatus" ></td>
+                <td> <button class="btn btn-success btn-xs edit" name="${u.username}"  data-toggle="modal" data-target="#changeChar">修改</button>
               <button class="btn btn-danger btn-xs del" data-toggle="modal" name="${u.username}" data-target="#deleteChar">删除</button></td>
             </tr>
         </c:forEach>
@@ -95,5 +90,52 @@
         }
 
     })
+
+    $(".edit").click(function () {
+        if(confirm("是否修改?")){
+            $.ajax({
+                type:"get",
+                url:"/user/edit",
+                dataType: 'json'
+                 ,data:{username:$(this).attr("name"),firstname:$(".firstname").val(),lastname:$(".lastname").val(),email:$(".email").val(),password:$(".password").val(),phone:$(".phone").val(),userstatus:$(".userstatus").val()}
+
+                , success: function (data) {
+                    if(data.code==200){
+                        alert("修改成功");
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        alert("修改失败");
+                    }
+                }
+            })
+        }
+    })
+
+    // $("#selectFirst").click(function () {
+    //     if(confirm("是否发货?")){
+    //         $.ajax({
+    //             type:"get",
+    //             url:"/user/selectFirst",
+    //             dataType: 'json'
+    //             ,data:{firstname:$(".firstname").attr(name)}
+    //             , success: function (data) {
+    //                 if(data.code==200){
+    //                     alert("成功发货");
+    //                     window.location.reload();
+    //                 }else if (data.code==201)
+    //                 {
+    //                     alert("不可以重复发货哦");
+    //                     //window.location.reload();
+    //                 }
+    //                 else
+    //                 {
+    //                     alert("发货失败");
+    //                 }
+    //             }
+    //         })
+    //     }
+    // })
 </script>
 </html>

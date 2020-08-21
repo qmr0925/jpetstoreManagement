@@ -9,5 +9,8 @@
         <module name="swager" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="swager" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

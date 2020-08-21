@@ -12,12 +12,17 @@ public interface OrdersMapper {
 
 
     Orders selectByPrimaryKey(Integer id);
+    String selectStatusByPrimaryKey(int id);
+    List<Orders> selectByUserName(String username);
+
+    List<Orders> selectByStatus(String orderStatus);
 
 
     List<Orders> selectAll();
 
 
     int updateByPrimaryKey(Orders record);
+    int updateByPrimaryKeys(int orderid);
     List<String> selectItemId (int orderid);
 
 }

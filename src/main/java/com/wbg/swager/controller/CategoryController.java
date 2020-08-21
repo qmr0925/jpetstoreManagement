@@ -23,10 +23,12 @@ public class CategoryController {
         model.addAttribute("category",categoryMapper.selectAll());
         return "category";
     }
+
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
     public String add(Category category) {
         R r=new R();
+        System.out.println(category.getId());
         try {
             if(categoryMapper.insert(category)>0){
                 r.setCode(200);
@@ -38,14 +40,32 @@ public class CategoryController {
 
         return r.toJson();
     }
+
+    @RequestMapping(value = "/change",method = RequestMethod.POST)
+    @ResponseBody
+    public String change(Category category) {
+        R r=new R();
+        System.out.println(category.getId());
+        try {
+            if(categoryMapper.updateByPrimaryKey(category)>0){
+                r.setCode(200);
+            }
+        }catch (Exception e){
+
+            return r.toJson();
+        }
+
+        return r.toJson();
+    }
+
     @RequestMapping(value = "/del",method = RequestMethod.GET)
     @ResponseBody
-    public String del(int id) {
+    public String del(String id) {
         R r=new R();
         try {
-        if(categoryMapper.deleteByPrimaryKey(id)>0){
-            r.setCode(200);
-        }
+            if(categoryMapper.deleteByPrimaryKey(id)>0){
+                r.setCode(200);
+            }
         }catch (Exception e){
 
             return r.toJson();
